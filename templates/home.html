@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Sql</title>
+  </head>
+  <body>
+    <h2>Home Page</h2> 
+    <hr>
+    <h4>Add Student Details</h4>
+    <a href="/insert">Add details</a>
+
+    <hr>
+    <h4>List of Students</h4>
+
+    {{range .}} 
+            <ol>Id: {{.Id}}</ol>
+            <ol>First Name: {{.FirstName}}</ol>
+            <ol>Last Name: {{.LastName}}</ol>
+            <ol>Age: {{.Age}}</ol>
+        <a href="/update/?id={{.Id}}">Update details</a>
+        <a href="/delete/?id={{.Id}}">Delete details</a>
+        <hr>
+        <br>
+    {{end}}
+  </body>
+</html>
