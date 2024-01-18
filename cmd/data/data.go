@@ -69,3 +69,46 @@ func GetAllStudents() ([]models.User, error) {
 
 	return users, nil
 }
+
+func UpdateStudent(firstName, lastName string, id, age int) error {
+	stmt, err := config.MyApp.DB.Prepare("UPDATE students SET firstname = ?, lastname = ?, age = ? WHERE id = ?")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(firstName, lastName, age, id)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil || rowsAffected != 1 {
+		return err
+	}
+
+	return nil
+
+}
+
+func DeleteStudent(id int) error {
+	stmt, err := config.MyApp.DB.Prepare("DELETE FROM students WHERE id = ?")
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil || rowsAffected != 1 {
+		return err
+	}
+
+	return nil
+}

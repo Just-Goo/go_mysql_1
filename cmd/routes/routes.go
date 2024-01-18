@@ -11,6 +11,7 @@ func Router() *http.ServeMux {
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/home", handlers.HomeHandler)
 	http.HandleFunc("/insert", handlers.InsertHandler)
+	http.HandleFunc("/delete/", handlers.DeleteHandler)
 	http.HandleFunc("/error", handlers.ErrorHandler)
 
 	return http.DefaultServeMux

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt" 
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -61,6 +61,28 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	config.MyApp.Tpl.ExecuteTemplate(w, "home.html", users)
+}
+
+func DeleteHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("======== Delete Handler ==========")
+	
+	r.ParseForm()
+	id := r.FormValue("id")
+
+	studentId, err := strconv.Atoi(id)
+	if err != nil {
+		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
+		return
+	}
+
+	err = data.DeleteStudent(studentId)
+	if err != nil {
+		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
+		return
+	}
+
+	config.MyApp.Tpl.ExecuteTemplate(w, "delete.html", "Student deleted successfully")
+
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request) {
