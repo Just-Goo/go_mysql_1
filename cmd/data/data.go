@@ -1,6 +1,6 @@
 package data
 
-import (
+import ( 
 	"github.com/Just-Goo/Go-MySql-1/cmd/config"
 	"github.com/Just-Goo/Go-MySql-1/cmd/models"
 )
@@ -26,7 +26,7 @@ func InsertStudent(firstName, lastName string, age int) error {
 	return nil
 }
 
-func InsertStudentReturnID(firstName, lastName string, age int) (Id int, err error) {
+func InsertStudentReturnID(firstName, lastName string, age int) (Id string, err error) {
 
 	query := "INSERT INTO students (firstname, lastname, age) VALUES (?, ?, ?) RETURNING id"
 
@@ -36,6 +36,17 @@ func InsertStudentReturnID(firstName, lastName string, age int) (Id int, err err
 	}
 
 	return Id, nil
+}
+
+func GetSingleStudent(id string) (user models.User, err error) { 
+	row := config.MyApp.DB.QueryRow( "SELECT id, firstname, lastname, age FROM students WHERE id = ?", id)
+
+	err = row.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Age)
+	if err != nil {
+		return user, err
+	}
+	
+	return user, nil
 }
 
 func GetAllStudents() ([]models.User, error) {
@@ -70,11 +81,12 @@ func GetAllStudents() ([]models.User, error) {
 	return users, nil
 }
 
-func UpdateStudent(firstName, lastName string, id, age int) error {
+func UpdateStudent(firstName, lastName, id string, age int) error {
 	stmt, err := config.MyApp.DB.Prepare("UPDATE students SET firstname = ?, lastname = ?, age = ? WHERE id = ?")
 	if err != nil {
 		return err
 	}
+	
 	defer stmt.Close()
 
 	result, err := stmt.Exec(firstName, lastName, age, id)
@@ -92,7 +104,7 @@ func UpdateStudent(firstName, lastName string, id, age int) error {
 
 }
 
-func DeleteStudent(id int) error {
+func DeleteStudent(id string) error {
 	stmt, err := config.MyApp.DB.Prepare("DELETE FROM students WHERE id = ?")
 	if err != nil {
 		return err

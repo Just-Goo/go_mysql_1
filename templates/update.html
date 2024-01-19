@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Sql</title>
+</head>
+<body>
+    
+    <form action="/updatestudent/?ID={{.Id}}" method="post">
+        <label for="fname">First Name</label>
+        <input type="text" name="firstname" id="fname" value="{{.FirstName}}"> <br> <br>
+        <label for="lname">Last Name</label>
+        <input type="text" name="lastname" id="lname" value="{{.LastName}}"><br> <br>
+        <label for="age">Age</label>
+        <input type="number" name="age" id="age" value="{{.Age}}"><br><br>
+        <input type="submit" value="Update Details">
+    </form>
+
+    <br> <br>
+
+    <a href="/home">View all students</a>
+    
+</body>
+</html>

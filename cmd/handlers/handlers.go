@@ -63,25 +63,57 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	config.MyApp.Tpl.ExecuteTemplate(w, "home.html", users)
 }
 
-func DeleteHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("======== Delete Handler ==========")
-	
-	r.ParseForm()
+func UpdateHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("======== Update Handler ==========")
+
+	r.ParseForm() 
 	id := r.FormValue("id")
 
-	studentId, err := strconv.Atoi(id)
+	user, err := data.GetSingleStudent(id)
+	if err != nil {
+		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
+	}  
+	
+	config.MyApp.Tpl.ExecuteTemplate(w, "update.html", user)
+
+}
+
+func UpdateStudentHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("======== Update Student Handler ==========")
+
+	r.ParseForm()
+	id := r.FormValue("ID")
+	firstName := r.FormValue("firstname")
+	lastName := r.FormValue("lastname")
+	age := r.FormValue("age")
+ 
+	studentAge, err := strconv.Atoi(age)
+	if err != nil {
+		config.MyApp.Tpl.ExecuteTemplate(w, "update.html", "Invalid age value")
+	}
+
+	err = data.UpdateStudent(firstName, lastName, id, studentAge)
+	if err != nil {
+		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
+	}
+
+	config.MyApp.Tpl.ExecuteTemplate(w, "result.html", "Student details updated")
+
+}
+
+func DeleteHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("======== Delete Handler ==========")
+
+	r.ParseForm() 
+	id := r.FormValue("id")
+
+	err := data.DeleteStudent(id)
 	if err != nil {
 		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
 		return
 	}
 
-	err = data.DeleteStudent(studentId)
-	if err != nil {
-		http.Redirect(w, r, "/error", http.StatusTemporaryRedirect)
-		return
-	}
-
-	config.MyApp.Tpl.ExecuteTemplate(w, "delete.html", "Student deleted successfully")
+	config.MyApp.Tpl.ExecuteTemplate(w, "result.html", "Student deleted successfully")
 
 }
 
